@@ -21,29 +21,30 @@ namespace ContosoUniversity.Controllers
             
             try
             {
-                var connection = db.Database.GetDbConnection();
-                using (var command = connection.CreateCommand())
+                using (var connection = db.Database.GetDbConnection())
                 {
-                    command.CommandText = "sp_GetAllToDos";
-                    command.CommandType = CommandType.StoredProcedure;
-                    
-                    connection.Open();
-                    using (var reader = command.ExecuteReader())
+                    using (var command = connection.CreateCommand())
                     {
-                        while (reader.Read())
+                        command.CommandText = "sp_GetAllToDos";
+                        command.CommandType = CommandType.StoredProcedure;
+                        
+                        connection.Open();
+                        using (var reader = command.ExecuteReader())
                         {
-                            todos.Add(new ToDo
+                            while (reader.Read())
                             {
-                                ID = reader.GetInt32(reader.GetOrdinal("ID")),
-                                Title = reader.GetString(reader.GetOrdinal("Title")),
-                                Description = reader.IsDBNull(reader.GetOrdinal("Description")) ? null : reader.GetString(reader.GetOrdinal("Description")),
-                                IsCompleted = reader.GetBoolean(reader.GetOrdinal("IsCompleted")),
-                                CreatedDate = reader.GetDateTime(reader.GetOrdinal("CreatedDate")),
-                                CompletedDate = reader.IsDBNull(reader.GetOrdinal("CompletedDate")) ? (DateTime?)null : reader.GetDateTime(reader.GetOrdinal("CompletedDate"))
-                            });
+                                todos.Add(new ToDo
+                                {
+                                    ID = reader.GetInt32(reader.GetOrdinal("ID")),
+                                    Title = reader.GetString(reader.GetOrdinal("Title")),
+                                    Description = reader.IsDBNull(reader.GetOrdinal("Description")) ? null : reader.GetString(reader.GetOrdinal("Description")),
+                                    IsCompleted = reader.GetBoolean(reader.GetOrdinal("IsCompleted")),
+                                    CreatedDate = reader.GetDateTime(reader.GetOrdinal("CreatedDate")),
+                                    CompletedDate = reader.IsDBNull(reader.GetOrdinal("CompletedDate")) ? (DateTime?)null : reader.GetDateTime(reader.GetOrdinal("CompletedDate"))
+                                });
+                            }
                         }
                     }
-                    connection.Close();
                 }
             }
             catch (Exception ex)
@@ -67,30 +68,31 @@ namespace ContosoUniversity.Controllers
             
             try
             {
-                var connection = db.Database.GetDbConnection();
-                using (var command = connection.CreateCommand())
+                using (var connection = db.Database.GetDbConnection())
                 {
-                    command.CommandText = "sp_GetToDoById";
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.Add(new SqlParameter("@ID", id));
-                    
-                    connection.Open();
-                    using (var reader = command.ExecuteReader())
+                    using (var command = connection.CreateCommand())
                     {
-                        if (reader.Read())
+                        command.CommandText = "sp_GetToDoById";
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.Add(new SqlParameter("@ID", id));
+                        
+                        connection.Open();
+                        using (var reader = command.ExecuteReader())
                         {
-                            todo = new ToDo
+                            if (reader.Read())
                             {
-                                ID = reader.GetInt32(reader.GetOrdinal("ID")),
-                                Title = reader.GetString(reader.GetOrdinal("Title")),
-                                Description = reader.IsDBNull(reader.GetOrdinal("Description")) ? null : reader.GetString(reader.GetOrdinal("Description")),
-                                IsCompleted = reader.GetBoolean(reader.GetOrdinal("IsCompleted")),
-                                CreatedDate = reader.GetDateTime(reader.GetOrdinal("CreatedDate")),
-                                CompletedDate = reader.IsDBNull(reader.GetOrdinal("CompletedDate")) ? (DateTime?)null : reader.GetDateTime(reader.GetOrdinal("CompletedDate"))
-                            };
+                                todo = new ToDo
+                                {
+                                    ID = reader.GetInt32(reader.GetOrdinal("ID")),
+                                    Title = reader.GetString(reader.GetOrdinal("Title")),
+                                    Description = reader.IsDBNull(reader.GetOrdinal("Description")) ? null : reader.GetString(reader.GetOrdinal("Description")),
+                                    IsCompleted = reader.GetBoolean(reader.GetOrdinal("IsCompleted")),
+                                    CreatedDate = reader.GetDateTime(reader.GetOrdinal("CreatedDate")),
+                                    CompletedDate = reader.IsDBNull(reader.GetOrdinal("CompletedDate")) ? (DateTime?)null : reader.GetDateTime(reader.GetOrdinal("CompletedDate"))
+                                };
+                            }
                         }
                     }
-                    connection.Close();
                 }
             }
             catch (Exception ex)
@@ -113,7 +115,6 @@ namespace ContosoUniversity.Controllers
         {
             var todo = new ToDo
             {
-                CreatedDate = DateTime.Today,
                 IsCompleted = false
             };
             return View(todo);
@@ -122,35 +123,41 @@ namespace ContosoUniversity.Controllers
         // POST: ToDos/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Title,Description,IsCompleted,CreatedDate,CompletedDate")] ToDo todo)
+        public ActionResult Create([Bind(Include = "Title,Description,IsCompleted,CompletedDate")] ToDo todo)
         {
             try
             {
-                // Validate CreatedDate
-                if (todo.CreatedDate == DateTime.MinValue || todo.CreatedDate == default(DateTime))
-                {
-                    ModelState.AddModelError("CreatedDate", "Please enter a valid created date.");
-                }
+                // Auto-set CreatedDate to current date
+                todo.CreatedDate = DateTime.Today;
 
                 if (ModelState.IsValid)
                 {
-                    var connection = db.Database.GetDbConnection();
-                    using (var command = connection.CreateCommand())
+                    int newId = 0;
+                    using (var connection = db.Database.GetDbConnection())
                     {
-                        command.CommandText = "sp_CreateToDo";
-                        command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.Add(new SqlParameter("@Title", todo.Title));
-                        command.Parameters.Add(new SqlParameter("@Description", (object)todo.Description ?? DBNull.Value));
-                        command.Parameters.Add(new SqlParameter("@IsCompleted", todo.IsCompleted));
-                        command.Parameters.Add(new SqlParameter("@CreatedDate", todo.CreatedDate));
-                        command.Parameters.Add(new SqlParameter("@CompletedDate", (object)todo.CompletedDate ?? DBNull.Value));
-                        
-                        connection.Open();
-                        var newId = command.ExecuteScalar();
-                        connection.Close();
-                        
-                        Trace.TraceInformation($"Created ToDo with ID: {newId}");
+                        using (var command = connection.CreateCommand())
+                        {
+                            command.CommandText = "sp_CreateToDo";
+                            command.CommandType = CommandType.StoredProcedure;
+                            command.Parameters.Add(new SqlParameter("@Title", todo.Title));
+                            command.Parameters.Add(new SqlParameter("@Description", (object)todo.Description ?? DBNull.Value));
+                            command.Parameters.Add(new SqlParameter("@IsCompleted", todo.IsCompleted));
+                            command.Parameters.Add(new SqlParameter("@CreatedDate", todo.CreatedDate));
+                            command.Parameters.Add(new SqlParameter("@CompletedDate", (object)todo.CompletedDate ?? DBNull.Value));
+                            
+                            connection.Open();
+                            var result = command.ExecuteScalar();
+                            if (result != null)
+                            {
+                                newId = Convert.ToInt32(result);
+                            }
+                        }
                     }
+                    
+                    Trace.TraceInformation($"Created ToDo with ID: {newId}");
+                    
+                    // Send notification for todo creation
+                    SendEntityNotification("ToDo", newId.ToString(), todo.Title, EntityOperation.CREATE);
                     
                     return RedirectToAction("Index");
                 }
@@ -176,30 +183,31 @@ namespace ContosoUniversity.Controllers
             
             try
             {
-                var connection = db.Database.GetDbConnection();
-                using (var command = connection.CreateCommand())
+                using (var connection = db.Database.GetDbConnection())
                 {
-                    command.CommandText = "sp_GetToDoById";
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.Add(new SqlParameter("@ID", id));
-                    
-                    connection.Open();
-                    using (var reader = command.ExecuteReader())
+                    using (var command = connection.CreateCommand())
                     {
-                        if (reader.Read())
+                        command.CommandText = "sp_GetToDoById";
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.Add(new SqlParameter("@ID", id));
+                        
+                        connection.Open();
+                        using (var reader = command.ExecuteReader())
                         {
-                            todo = new ToDo
+                            if (reader.Read())
                             {
-                                ID = reader.GetInt32(reader.GetOrdinal("ID")),
-                                Title = reader.GetString(reader.GetOrdinal("Title")),
-                                Description = reader.IsDBNull(reader.GetOrdinal("Description")) ? null : reader.GetString(reader.GetOrdinal("Description")),
-                                IsCompleted = reader.GetBoolean(reader.GetOrdinal("IsCompleted")),
-                                CreatedDate = reader.GetDateTime(reader.GetOrdinal("CreatedDate")),
-                                CompletedDate = reader.IsDBNull(reader.GetOrdinal("CompletedDate")) ? (DateTime?)null : reader.GetDateTime(reader.GetOrdinal("CompletedDate"))
-                            };
+                                todo = new ToDo
+                                {
+                                    ID = reader.GetInt32(reader.GetOrdinal("ID")),
+                                    Title = reader.GetString(reader.GetOrdinal("Title")),
+                                    Description = reader.IsDBNull(reader.GetOrdinal("Description")) ? null : reader.GetString(reader.GetOrdinal("Description")),
+                                    IsCompleted = reader.GetBoolean(reader.GetOrdinal("IsCompleted")),
+                                    CreatedDate = reader.GetDateTime(reader.GetOrdinal("CreatedDate")),
+                                    CompletedDate = reader.IsDBNull(reader.GetOrdinal("CompletedDate")) ? (DateTime?)null : reader.GetDateTime(reader.GetOrdinal("CompletedDate"))
+                                };
+                            }
                         }
                     }
-                    connection.Close();
                 }
             }
             catch (Exception ex)
@@ -224,32 +232,30 @@ namespace ContosoUniversity.Controllers
         {
             try
             {
-                // Validate CreatedDate
-                if (todo.CreatedDate == DateTime.MinValue || todo.CreatedDate == default(DateTime))
-                {
-                    ModelState.AddModelError("CreatedDate", "Please enter a valid created date.");
-                }
-
                 if (ModelState.IsValid)
                 {
-                    var connection = db.Database.GetDbConnection();
-                    using (var command = connection.CreateCommand())
+                    using (var connection = db.Database.GetDbConnection())
                     {
-                        command.CommandText = "sp_UpdateToDo";
-                        command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.Add(new SqlParameter("@ID", todo.ID));
-                        command.Parameters.Add(new SqlParameter("@Title", todo.Title));
-                        command.Parameters.Add(new SqlParameter("@Description", (object)todo.Description ?? DBNull.Value));
-                        command.Parameters.Add(new SqlParameter("@IsCompleted", todo.IsCompleted));
-                        command.Parameters.Add(new SqlParameter("@CreatedDate", todo.CreatedDate));
-                        command.Parameters.Add(new SqlParameter("@CompletedDate", (object)todo.CompletedDate ?? DBNull.Value));
-                        
-                        connection.Open();
-                        command.ExecuteNonQuery();
-                        connection.Close();
-                        
-                        Trace.TraceInformation($"Updated ToDo with ID: {todo.ID}");
+                        using (var command = connection.CreateCommand())
+                        {
+                            command.CommandText = "sp_UpdateToDo";
+                            command.CommandType = CommandType.StoredProcedure;
+                            command.Parameters.Add(new SqlParameter("@ID", todo.ID));
+                            command.Parameters.Add(new SqlParameter("@Title", todo.Title));
+                            command.Parameters.Add(new SqlParameter("@Description", (object)todo.Description ?? DBNull.Value));
+                            command.Parameters.Add(new SqlParameter("@IsCompleted", todo.IsCompleted));
+                            command.Parameters.Add(new SqlParameter("@CreatedDate", todo.CreatedDate));
+                            command.Parameters.Add(new SqlParameter("@CompletedDate", (object)todo.CompletedDate ?? DBNull.Value));
+                            
+                            connection.Open();
+                            command.ExecuteNonQuery();
+                        }
                     }
+                    
+                    Trace.TraceInformation($"Updated ToDo with ID: {todo.ID}");
+                    
+                    // Send notification for todo update
+                    SendEntityNotification("ToDo", todo.ID.ToString(), todo.Title, EntityOperation.UPDATE);
                     
                     return RedirectToAction("Index");
                 }
@@ -275,30 +281,31 @@ namespace ContosoUniversity.Controllers
             
             try
             {
-                var connection = db.Database.GetDbConnection();
-                using (var command = connection.CreateCommand())
+                using (var connection = db.Database.GetDbConnection())
                 {
-                    command.CommandText = "sp_GetToDoById";
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.Add(new SqlParameter("@ID", id));
-                    
-                    connection.Open();
-                    using (var reader = command.ExecuteReader())
+                    using (var command = connection.CreateCommand())
                     {
-                        if (reader.Read())
+                        command.CommandText = "sp_GetToDoById";
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.Add(new SqlParameter("@ID", id));
+                        
+                        connection.Open();
+                        using (var reader = command.ExecuteReader())
                         {
-                            todo = new ToDo
+                            if (reader.Read())
                             {
-                                ID = reader.GetInt32(reader.GetOrdinal("ID")),
-                                Title = reader.GetString(reader.GetOrdinal("Title")),
-                                Description = reader.IsDBNull(reader.GetOrdinal("Description")) ? null : reader.GetString(reader.GetOrdinal("Description")),
-                                IsCompleted = reader.GetBoolean(reader.GetOrdinal("IsCompleted")),
-                                CreatedDate = reader.GetDateTime(reader.GetOrdinal("CreatedDate")),
-                                CompletedDate = reader.IsDBNull(reader.GetOrdinal("CompletedDate")) ? (DateTime?)null : reader.GetDateTime(reader.GetOrdinal("CompletedDate"))
-                            };
+                                todo = new ToDo
+                                {
+                                    ID = reader.GetInt32(reader.GetOrdinal("ID")),
+                                    Title = reader.GetString(reader.GetOrdinal("Title")),
+                                    Description = reader.IsDBNull(reader.GetOrdinal("Description")) ? null : reader.GetString(reader.GetOrdinal("Description")),
+                                    IsCompleted = reader.GetBoolean(reader.GetOrdinal("IsCompleted")),
+                                    CreatedDate = reader.GetDateTime(reader.GetOrdinal("CreatedDate")),
+                                    CompletedDate = reader.IsDBNull(reader.GetOrdinal("CompletedDate")) ? (DateTime?)null : reader.GetDateTime(reader.GetOrdinal("CompletedDate"))
+                                };
+                            }
                         }
                     }
-                    connection.Close();
                 }
             }
             catch (Exception ex)
@@ -323,19 +330,46 @@ namespace ContosoUniversity.Controllers
         {
             try
             {
-                var connection = db.Database.GetDbConnection();
-                using (var command = connection.CreateCommand())
+                string todoTitle = string.Empty;
+                
+                // Get the todo title before deleting for notification
+                using (var connection = db.Database.GetDbConnection())
                 {
-                    command.CommandText = "sp_DeleteToDo";
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.Add(new SqlParameter("@ID", id));
-                    
-                    connection.Open();
-                    command.ExecuteNonQuery();
-                    connection.Close();
-                    
-                    Trace.TraceInformation($"Deleted ToDo with ID: {id}");
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.CommandText = "sp_GetToDoById";
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.Add(new SqlParameter("@ID", id));
+                        
+                        connection.Open();
+                        using (var reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                todoTitle = reader.GetString(reader.GetOrdinal("Title"));
+                            }
+                        }
+                    }
                 }
+                
+                // Delete the todo
+                using (var connection = db.Database.GetDbConnection())
+                {
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.CommandText = "sp_DeleteToDo";
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.Add(new SqlParameter("@ID", id));
+                        
+                        connection.Open();
+                        command.ExecuteNonQuery();
+                    }
+                }
+                
+                Trace.TraceInformation($"Deleted ToDo with ID: {id}");
+                
+                // Send notification for todo deletion
+                SendEntityNotification("ToDo", id.ToString(), todoTitle, EntityOperation.DELETE);
                 
                 return RedirectToAction("Index");
             }
