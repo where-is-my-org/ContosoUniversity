@@ -332,16 +332,17 @@ namespace ContosoUniversity.Controllers
             {
                 string todoTitle = string.Empty;
                 
-                // Get the todo title before deleting for notification
                 using (var connection = db.Database.GetDbConnection())
                 {
+                    connection.Open();
+                    
+                    // Get the todo title before deleting for notification
                     using (var command = connection.CreateCommand())
                     {
                         command.CommandText = "sp_GetToDoById";
                         command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.Add(new SqlParameter("@ID", id));
                         
-                        connection.Open();
                         using (var reader = command.ExecuteReader())
                         {
                             if (reader.Read())
@@ -350,18 +351,13 @@ namespace ContosoUniversity.Controllers
                             }
                         }
                     }
-                }
-                
-                // Delete the todo
-                using (var connection = db.Database.GetDbConnection())
-                {
+                    
+                    // Delete the todo
                     using (var command = connection.CreateCommand())
                     {
                         command.CommandText = "sp_DeleteToDo";
                         command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.Add(new SqlParameter("@ID", id));
-                        
-                        connection.Open();
                         command.ExecuteNonQuery();
                     }
                 }
