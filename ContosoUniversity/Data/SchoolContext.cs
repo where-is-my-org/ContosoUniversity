@@ -20,6 +20,7 @@ namespace ContosoUniversity.Data
         public DbSet<Student> Students { get; set; }
         public DbSet<Instructor> Instructors { get; set; }
         public DbSet<Notification> Notifications { get; set; }
+        public DbSet<ToDo> ToDos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -43,6 +44,7 @@ namespace ContosoUniversity.Data
             modelBuilder.Entity<OfficeAssignment>().ToTable("OfficeAssignment");
             modelBuilder.Entity<CourseAssignment>().ToTable("CourseAssignment");
             modelBuilder.Entity<Notification>().ToTable("Notification");
+            modelBuilder.Entity<ToDo>().ToTable("ToDo");
 
             // Configure Table-per-Hierarchy (TPH) inheritance for Person
             // Map the base Person class and its derived classes to a single table
