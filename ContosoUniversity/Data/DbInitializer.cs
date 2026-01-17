@@ -1,6 +1,9 @@
 using System;
 using System.Linq;
+using System.IO;
+using System.Diagnostics;
 using ContosoUniversity.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace ContosoUniversity.Data
 {
@@ -10,6 +13,9 @@ namespace ContosoUniversity.Data
         {
             // Ensure the database is created
             context.Database.EnsureCreated();
+
+            // Ensure ToDo stored procedures exist on every startup
+            CreateToDoStoredProcedures(context);
 
             // Look for any students.
             if (context.Students.Any())
@@ -246,6 +252,71 @@ namespace ContosoUniversity.Data
                 }
             }
             context.SaveChanges();
+
+        }
+
+        private static void CreateToDoStoredProcedures(SchoolContext context)
+        {
+            var sqlScript = LoadToDoStoredProcedureScript();
+            if (string.IsNullOrWhiteSpace(sqlScript))
+            {
+                Trace.TraceWarning("ToDoStoredProcedures.sql not found or empty. Skipping stored procedure setup.");
+                return;
+            }
+
+            // Split by GO and execute each batch separately
+            var batches = sqlScript.Split(new[] { "\nGO\n", "\nGO;", "\nGO\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+            
+            foreach (var batch in batches)
+            {
+                var trimmedBatch = batch.Trim();
+                if (!string.IsNullOrWhiteSpace(trimmedBatch))
+                {
+                    try
+                    {
+                        context.Database.ExecuteSqlRaw(trimmedBatch);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine($"Error executing batch: {ex.Message}");
+                        // Continue with next batch
+                    }
+                }
+            }
+        }
+
+        private static string LoadToDoStoredProcedureScript()
+        {
+            try
+            {
+                var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+                var scriptPath = Path.Combine(baseDirectory, "Data", "ToDoStoredProcedures.sql");
+
+                if (!File.Exists(scriptPath))
+                {
+                    var parentDirectory = Directory.GetParent(baseDirectory)?.FullName;
+                    if (!string.IsNullOrWhiteSpace(parentDirectory))
+                    {
+                        var parentScriptPath = Path.Combine(parentDirectory, "Data", "ToDoStoredProcedures.sql");
+                        if (File.Exists(parentScriptPath))
+                        {
+                            scriptPath = parentScriptPath;
+                        }
+                    }
+                }
+
+                if (!File.Exists(scriptPath))
+                {
+                    return null;
+                }
+
+                return File.ReadAllText(scriptPath);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error reading ToDoStoredProcedures.sql: {ex.Message}");
+                return null;
+            }
         }
     }
 }

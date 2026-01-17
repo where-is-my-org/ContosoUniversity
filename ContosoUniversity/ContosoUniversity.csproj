@@ -227,6 +227,7 @@
     <Compile Include="Controllers\CoursesController.cs" />
     <Compile Include="Controllers\InstructorsController.cs" />
     <Compile Include="Controllers\DepartmentsController.cs" />
+    <Compile Include="Controllers\ToDosController.cs" />
     <Compile Include="Data\SchoolContext.cs" />
     <Compile Include="Data\DbInitializer.cs" />
     <Compile Include="Data\SchoolContextFactory.cs" />
@@ -243,6 +244,7 @@
     <Compile Include="Models\OfficeAssignment.cs" />
     <Compile Include="Models\Person.cs" />
     <Compile Include="Models\Student.cs" />
+    <Compile Include="Models\ToDo.cs" />
     <Compile Include="Models\SchoolViewModels\AssignedCourseData.cs" />
     <Compile Include="Models\SchoolViewModels\EnrollmentDateGroup.cs" />
     <Compile Include="Models\SchoolViewModels\InstructorIndexData.cs" />
@@ -307,6 +309,11 @@
     <Content Include="Views\Departments\Create.cshtml" />
     <Content Include="Views\Departments\Edit.cshtml" />
     <Content Include="Views\Departments\Delete.cshtml" />
+    <Content Include="Views\ToDos\Index.cshtml" />
+    <Content Include="Views\ToDos\Details.cshtml" />
+    <Content Include="Views\ToDos\Create.cshtml" />
+    <Content Include="Views\ToDos\Edit.cshtml" />
+    <Content Include="Views\ToDos\Delete.cshtml" />
     <Content Include="Uploads\TeachingMaterials\.gitkeep" />
   </ItemGroup>
   <ItemGroup>
