@@ -1,0 +1,2 @@
+- 一律使用繁體中文回覆
+- commit 紀錄中須包含 <generated-by-copilot> 標記
