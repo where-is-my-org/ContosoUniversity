@@ -4,7 +4,7 @@
 
 ## 目標 / Objective
 
-分析現有程式碼與程式碼內的舊有規格文件，產出一份符合移轉需求的新規格文件（.NET 8 / ASP.NET Core Web API + React），**不包含任何程式碼實作、IaC/部署腳本或 CI/CD 實作內容**。規格內容聚焦於：架構拆分、相容性風險、需求與替代方案、介面/契約定義、套件與安全性升級目標，以及可部署至 Azure App Service（Linux）與 Azure SQL Database 的部署需求與驗證準則。
+分析現有程式碼與程式碼內的舊有規格文件，產出一份符合移轉需求的新規格文件（.NET 8 / ASP.NET Core Web API + React），**不改動既有任何規格和說明文件且不包含任何程式碼實作、IaC/部署腳本或 CI/CD 實作內容**。規格內容聚焦於：架構拆分、相容性風險、需求與替代方案、介面/契約定義、套件與安全性升級目標，以及可部署至 Azure App Service（Linux）與 Azure SQL Database 的部署需求與驗證準則。
 
 ---
 

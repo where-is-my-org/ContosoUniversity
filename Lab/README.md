@@ -100,7 +100,10 @@
         ![alt text](images/merge-pr.png)
    - 開啟 [場景二：規格文件→新規格文件](./scenario-2-specification-to-new-architecture.md)，並將內容複製下來
    - 於 Repository 中建立一個新的 Issue，並將複製的內容貼上
-   - 在 Issue 頁面中的右側 Assignees 區域點選 **Assign to Copilot**，點選分支 icon，選擇 `docs` 作為 base 分支，完成指派 GitHub Copilot Coding Agent 為該 Issue 進行文件撰寫工作
+   - 在 Issue 頁面中的右側 Assignees 區域點選 **Assign to Copilot**
+   - 增加額外的 prompt `可參考舊規格文件為 Lab/contosolab-specification.md`
+        ![alt text](images/add-optional-prompt.png)
+   - 點選分支 icon，選擇 `docs` 作為 base 分支，完成指派 GitHub Copilot Coding Agent 為該 Issue 進行文件撰寫工作
         ![alt text](images/assign-coding-agent-with-branch.png)
 ---
 
