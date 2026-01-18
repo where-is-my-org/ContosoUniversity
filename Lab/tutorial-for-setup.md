@@ -16,9 +16,11 @@
         ![alt text](./images/issue.png)
         ![alt text](images/create-issue.png)
 
-   - **該步驟用於確認可指派 Coding Agent 進行工作**: 在 Issue 頁面中的右側 Assignees 區域點選 **Assign to Copilot**，指派 GitHub Copilot Coding Agent 為該 Issue 進行開發工作
+   - **該步驟用於確認可指派 Coding Agent 進行工作**: 在 Issue 頁面中的右側 Assignees 區域點選 **Assign to Copilot**，指派 Coding Agent 為該 Issue 進行開發工作
+
         ![alt text](./images/assign-coding-agent.png)
         ![alt text](images/confirm-assign.png)
+
    - **該步驟用於確認 Coding Agent 可運行**: 
         - 於建立的 Issue 頁面中，點選 `[WIP] xxxxx` 標題進入 Pull Request 頁面
             ![alt text](images/pr-link.png)
@@ -26,5 +28,6 @@
             ![alt text](images/working-coding-agent.png)
         - 等待 GitHub Copilot Coding Agent 完成文件撰寫，並於 Pull Request 頁面中查看與合併程式碼變更
             ![alt text](images/coding-agent-finished.png)
+            
    - **該步驟用於確認可正常建立 GitHub Codespaces 環境**: 切換至 Coding Agent 開發時所建立的分支，點選 **Code** 並選擇 **Code Spaces** 建立 codespace 環境
     ![alt text](./images/create-codespaces.png)
