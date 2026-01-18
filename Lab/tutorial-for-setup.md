@@ -30,4 +30,5 @@
             ![alt text](images/coding-agent-finished.png)
             
    - **該步驟用於確認可正常建立 GitHub Codespaces 環境**: 切換至 Coding Agent 開發時所建立的分支，點選 **Code** 並選擇 **Code Spaces** 建立 codespace 環境
-    ![alt text](./images/create-codespaces.png)
+    
+        ![alt text](./images/create-codespaces.png)
