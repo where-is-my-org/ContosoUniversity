@@ -74,12 +74,12 @@
 - **操作步驟**
    - 開啟 [場景三：規格文件→程式碼更新移轉](./scenario-3-specification-to-code.md)，閱讀內容並將內容複製下來
    - 於 Repository 中建立一個新的 Issue，並將複製的內容貼上
-   ![alt text](./image/issue.png)
+   ![alt text](./images/issue.png)
    - 在 Issue 頁面中的右側 Assignees 區域點選 **Assign to Copilot**，指派 GitHub Copilot Coding Agent 為該 Issue 進行開發工作
-   ![alt text](./image/assign-coding-agent.png)
+   ![alt text](./images/assign-coding-agent.png)
    - 等待 GitHub Copilot Coding Agent 完成程式碼撰寫，並於 Pull Request 頁面中查看與合併程式碼變更
    - 切換至 Coding Agent 開發時所建立的分支，點選 **Code** 並選擇 **Code Spaces** 建立 codespace 環境
-   ![alt text](./image/create-codespaces.png)
+   ![alt text](./images/create-codespaces.png)
 - **注意**: 程式於 codspaces 中執行因選擇較小之規格，若出現網頁反映較慢情況，或 404 錯誤，請稍待片刻或重新啟動應用程式或重新整理
 
 #### 1.2 協助提取既有程式碼中的需求並生成規格文件
@@ -124,3 +124,45 @@
 - **操作步驟：**
     1. 在 Chat 模式選擇 **prompt-engineer**，模型選擇 **Claude Sonnet 4.5**
     2. 輸入模糊的提示：`我需要進行升級` 輸出應包含分析後更加精確之提示詞
+
+---
+
+### Lab 3 : GitHub Copilot - your personal AI-assistant for development
+#### 3.1 使用 Agent 模式實作移轉後確認
+- **操作重點：** 利用 Agent Mode 進行移轉驗證並修復問題
+- **操作步驟：**
+    1. 選擇 `Agent` chat mode，並選擇模型 `Claude Sonnet 4.5`
+    2. 輸入提示詞 `安裝 .NET 8` 進行 .NET 8 安裝
+    3. 安裝完成後可參考生成之指令進行專案建置與執行，須注意至少需確認以下有執行
+        - 啟動 sql server container
+        - 於移轉後的專案目錄執行 `dotnet restore` 及 `dotnet build` 成功
+    4. 執行 `dotnet run` 後，開啟瀏覽器並連線至提供的 endpoint 進行功能測試
+    5. (Option) 若出現 waring: Dereference of a possibly null reference 可藉由 Agent 協助修復
+        ```
+        #terminalSelection 修復 warning
+        ```
+        ![alt text](images/build-warning.png)
+    6. (Option) 若於新增學生資料時出現日期錯誤如 `Enrollment date must be between 1753 and 9999`，請利用 Agent 協助進行偵錯與修復
+        ![alt text](images/date-issue.png)
+        - 使用 prompt `在新增學生資料時，選擇日期後會出現 Enrollment date must be between 1753 and 9999，進行修復`，並可利用 vision 功能提供截圖
+        ![alt text](images/fix-date-format-issue.png)
+    7. 查看 `Scripts/` 了解 Azure 資源部屬腳本及 `.github/workflows/deploy-to-azure.yml` 了解 CI/CD 自動化部署流程
+        ![alt text](images/deployment-review.png)
+#### 3.2 利用 GitHub Copilot 進行 code review
+- **示範重點：** 示範如何結合 Git 流程啟動 Copilot Code Review
+- **目的：** 確保程式變更已整理並交付給 Copilot 進行自動化審查
+- **操作方式：**
+    1. 透過 VS Code 介面開啟 Source Control 視窗
+    2. 點選 comit 欄位上方的 **Copilot Code Review**，逐步檢視建議，可選擇：
+        - Code Review - Unstaged Change
+            ![alt text](images/unstage-code-review.png)
+        - Code Review - Staged Change
+            ![alt text](images/stage-code-review.png)
+    3. 根據 Copilot Code Review 建議進行程式碼修改，完成改動後提交程式碼至遠端儲存庫
+
+### Lab 4 : Collaboration
+- 回到 Repository 主頁面，點選回先前 Coding Agent 所建立之 PR，選擇 Ready for review
+![alt text](images/ready-for-review.png)
+- 在頁面的最上方找到 Reviewers，選擇 Copilot 作為程式碼審查者
+![alt text](images/request-code-review.png)
+- 等待 Copilot 進行程式碼評審
