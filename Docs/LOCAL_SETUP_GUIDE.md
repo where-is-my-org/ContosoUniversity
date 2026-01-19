@@ -10,7 +10,23 @@
 
 ## 本地開發設置（Codespace）
 
-### 1. 啟動 SQL Server 容器
+### 1. 設置 SQL Server 密碼（可選）
+
+您可以使用環境變數自訂 SQL Server 密碼：
+
+```bash
+# Linux/Mac/Codespace
+export SQL_PASSWORD="YourCustomPassword"
+
+# Windows PowerShell
+$env:SQL_PASSWORD="YourCustomPassword"
+```
+
+如果不設置，將使用預設密碼 `YourStrong@Passw0rd`。
+
+⚠️ **安全提示**: 不要在生產環境使用預設密碼！
+
+### 2. 啟動 SQL Server 容器
 
 ```bash
 # 在專案根目錄執行
@@ -23,15 +39,19 @@ docker-compose ps
 docker-compose logs sqlserver
 ```
 
-### 2. 等待 SQL Server 就緒
+### 3. 等待 SQL Server 就緒
 
-SQL Server 需要約 10-20 秒啟動。您可以使用以下命令檢查:
+SQL Server 需要約 10-20 秒啟動。您可以使用以下命令檢查（使用您設置的密碼）:
 
 ```bash
+# 如果使用環境變數
+docker-compose exec sqlserver /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "${SQL_PASSWORD:-YourStrong@Passw0rd}" -C -Q "SELECT @@VERSION"
+
+# 或直接使用預設密碼
 docker-compose exec sqlserver /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "YourStrong@Passw0rd" -C -Q "SELECT @@VERSION"
 ```
 
-### 3. 設置環境變數並啟動應用
+### 4. 設置環境變數並啟動應用
 
 ```bash
 # 切換到 ContosoUniversity 專案目錄
@@ -59,6 +79,8 @@ Development 環境使用以下連接字串（在 `appsettings.Development.json` 
 ```
 Server=localhost,1433;Database=ContosoUniversity;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True;MultipleActiveResultSets=True
 ```
+
+⚠️ **注意**: 如果您使用自訂密碼（`SQL_PASSWORD` 環境變數），請相應更新 `appsettings.Development.json` 中的連接字串。
 
 ## 資料庫初始化
 

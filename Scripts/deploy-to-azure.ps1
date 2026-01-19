@@ -31,7 +31,7 @@ Write-Host ""
 
 # 確認繼續
 $confirmation = Read-Host "是否繼續部署？ (y/n)"
-if ($confirmation -ne 'y') {
+if ($confirmation -notin @('y', 'Y', 'yes', 'Yes', 'YES')) {
     Write-Host "部署已取消" -ForegroundColor Red
     exit
 }
