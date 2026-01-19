@@ -4,49 +4,7 @@
 
 ## 文件清單
 
-### 1. [場景一：舊程式碼→規格文件](./scenario-1-code-to-specification.md)
-
-此場景用於**從既有的專案程式碼中提取需求**，並生成對應的**規格文件**。此過程不包含任何程式碼修改或重構，專注於分析現有程式碼以捕捉功能需求與行為，主要提供舊有程式碼的理解與規格撰寫指引。
-
-**內容包括**
-- 舊程式碼讀取
-- 初步分析
-- 功能識別
-- 需求提取
-- 規格文件撰寫
-- 驗證與審查
-
-**適用對象**
-- 系統分析師
-- 技術寫作者
-- 專案經理
-- 維護團隊成員
-
----
-
-### 2. [場景二：規格文件→新規格文件](./scenario-2-specification-to-new-architecture.md)
-
-此場景用於**分析現有程式碼與程式碼內的舊有規格文件**，將 .NET Framework 4.8 規格文件轉換為前後端分離架構的**移轉需求新規格文件，同時包含升級及現代化需求**，該場景不包含任何程式碼實作、IaC 部署腳本或 CI/CD 實作內容，主要提供架構轉型與需求規格的分析與撰寫指引。
-
-**內容包括**
-- 現有規格文件讀取
-- 架構分析與相容性評估
-- 後端遷移需求規格
-- 前端需求規格
-- 套件與安全性升級目標
-- 服務設計與相依性注入需求
-- Azure 部署需求規格
-- 本地測試與驗證準則
-
-**適用對象**
-- 架構師
-- 全端開發工程師
-- 技術負責人
-- 系統分析師
-
----
-
-### 3. [場景三：規格文件→程式碼更新移轉](./scenario-3-specification-to-code.md)
+### [場景：規格文件→程式碼更新移轉](./specification-to-code.md)
 
 此場景用於依據既有規格文件或移轉項目將既有的專案更新為 .NET 8 及 React + ASP.NET Core Web API 的前後端分離架構，並落實套件升級、跨平台與雲端部署需求。
 
@@ -66,13 +24,12 @@
 
 ---
 ## 實作練習
-每個場景文件中均包含詳細的步驟說明與實作練習，建議依序完成三個場景以獲得完整的學習體驗。每個場景均設計為獨立模組，您可以根據需求選擇特定場景進行深入學習與實作。
 
 ### Lab 1 : Collaboration with Coding Agent
 #### 1.1 將移轉需求指派給 GitHub Copilot Coding Agent 進行開發工作
 - **操作重點：** 示範如何將移轉需求指派給 GitHub Copilot Coding Agent 進行程式碼更新工作
 - **操作步驟**
-   - 開啟 [場景三：規格文件→程式碼更新移轉](./scenario-3-specification-to-code.md)，閱讀內容並將內容複製下來
+   - 開啟 [規格文件→程式碼更新移轉](./specification-to-code.md)，閱讀內容並將內容複製下來
    - 於 Repository 中建立一個新的 Issue，並將複製的內容貼上
    ![alt text](./images/issue.png)
    - 在 Issue 頁面中的右側 Assignees 區域點選 **Assign to Copilot**，指派 GitHub Copilot Coding Agent 為該 Issue 進行開發工作
@@ -82,30 +39,6 @@
    ![alt text](./images/create-codespaces.png)
 - **注意**: 程式於 codspaces 中執行因選擇較小之規格，若出現網頁反映較慢情況，或 404 錯誤，請稍待片刻或重新啟動應用程式或重新整理
 
-#### 1.2 協助提取既有程式碼中的需求並生成規格文件
-- **操作重點：** 示範如何將既有程式碼中的需求提取並生成規格文件，並指派給 GitHub Copilot Coding Agent 進行文件撰寫工作
-- **操作步驟**
-   - 開啟 [場景一：舊程式碼→規格文件](./scenario-1-code-to-specification.md)，並將內容複製下來
-   - 於 Repository 中建立一個新的 Issue，並將複製的內容貼上
-   - 在 Issue 頁面中的右側 Assignees 區域點選 **Assign to Copilot**，指派 GitHub Copilot Coding Agent 為該 Issue 進行文件撰寫工作
-
-#### 1.3 將既有規格文件轉換為新架構的移轉需求規格文件
-- **操作重點：** 示範如何將既有規格文件轉換為新架構的移轉需求規格文件，並指派給 GitHub Copilot Coding Agent 進行文件撰寫工作
-- **操作步驟**
-   - 於 repository 中建立一個新的分支 `docs`
-        ![alt text](images/new-branch.png)
-   - 修改場景一 PR 之 base branch 為 `docs` 分支
-        ![alt text](images/change-base-branch.png)
-   - 進行合併 PR，將場景一 文件內容合併至 `docs` 分支
-        ![alt text](images/merge-pr.png)
-   - 開啟 [場景二：規格文件→新規格文件](./scenario-2-specification-to-new-architecture.md)，並將內容複製下來
-   - 於 Repository 中建立一個新的 Issue，並將複製的內容貼上
-   - 在 Issue 頁面中的右側 Assignees 區域點選 **Assign to Copilot**
-   - 增加額外的 prompt `可參考舊規格文件為 Lab/contosolab-specification.md`
-        ![alt text](images/add-optional-prompt.png)
-   - 點選分支 icon，選擇 `docs` 作為 base 分支，完成指派 GitHub Copilot Coding Agent 為該 Issue 進行文件撰寫工作
-        ![alt text](images/assign-coding-agent-with-branch.png)
----
 
 ### Lab 2 : Make GitHub Copilot Work for You
 - 於 Repository 中開啟 GitHub CCodespaces，點選 Code > Codespaces
