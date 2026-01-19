@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Linq;
-using System.Net;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using ContosoUniversity.Data;
+using ContosoUniversity.Services;
 using ContosoUniversity.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +14,10 @@ namespace ContosoUniversity.Controllers
 {
     public class ToDosController : BaseController
     {
+        public ToDosController(SchoolContext context, NotificationService notificationService) 
+            : base(context, notificationService)
+        {
+        }
         // GET: ToDos
         public ActionResult Index()
         {
@@ -61,7 +65,7 @@ namespace ContosoUniversity.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return BadRequest();
             }
 
             ToDo todo = null;
@@ -104,7 +108,7 @@ namespace ContosoUniversity.Controllers
 
             if (todo == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
             
             return View(todo);
@@ -115,6 +119,7 @@ namespace ContosoUniversity.Controllers
         {
             var todo = new ToDo
             {
+                Title = "",
                 IsCompleted = false
             };
             return View(todo);
@@ -123,7 +128,7 @@ namespace ContosoUniversity.Controllers
         // POST: ToDos/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Title,Description,IsCompleted,CompletedDate")] ToDo todo)
+        public ActionResult Create([Bind("Title,Description,IsCompleted,CompletedDate")] ToDo todo)
         {
             try
             {
@@ -176,7 +181,7 @@ namespace ContosoUniversity.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return BadRequest();
             }
 
             ToDo todo = null;
@@ -219,7 +224,7 @@ namespace ContosoUniversity.Controllers
 
             if (todo == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
             
             return View(todo);
@@ -228,7 +233,7 @@ namespace ContosoUniversity.Controllers
         // POST: ToDos/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Title,Description,IsCompleted,CreatedDate,CompletedDate")] ToDo todo)
+        public ActionResult Edit([Bind("ID,Title,Description,IsCompleted,CreatedDate,CompletedDate")] ToDo todo)
         {
             try
             {
@@ -274,7 +279,7 @@ namespace ContosoUniversity.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return BadRequest();
             }
 
             ToDo todo = null;
@@ -317,7 +322,7 @@ namespace ContosoUniversity.Controllers
 
             if (todo == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
             
             return View(todo);
@@ -377,13 +382,5 @@ namespace ContosoUniversity.Controllers
             }
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                // Base class will dispose db
-            }
-            base.Dispose(disposing);
-        }
-    }
+}
 }

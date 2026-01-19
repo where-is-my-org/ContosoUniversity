@@ -4,9 +4,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Contoso University</title>
-    @Styles.Render("~/Content/css")
+    <link rel="stylesheet" href="~/css/Site.css" />
+    <link rel="stylesheet" href="~/css/notifications.css" />
     <link href="~/Content/notifications.css" rel="stylesheet" />
-    @Scripts.Render("~/bundles/modernizr")
+    <script src="~/js/modernizr-2.6.2.js"></script>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -35,8 +36,8 @@
         </footer>
     </div>
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
+    <script src="~/js/jquery-3.4.1.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
     <script src="~/Scripts/notifications.js"></script>
     @RenderSection("scripts", required: false)
 </body>
