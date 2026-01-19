@@ -75,7 +75,7 @@
 ---
 
 ### Lab 3 : GitHub Copilot - your personal AI-assistant for development
-- 確認 情境三之程式碼更新移轉已完成後，於 Codespaces 中切換至該分支
+- 確認程式碼更新移轉已完成後，於 Codespaces 中切換至該分支
     ![alt text](images/switch-migration-branch.png)
 #### 3.1 使用 Agent 模式實作移轉後確認
 - **操作重點：** 利用 Agent Mode 進行移轉驗證並修復問題
