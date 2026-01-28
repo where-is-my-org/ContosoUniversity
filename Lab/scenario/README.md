@@ -87,7 +87,7 @@
 - **操作重點：** 示範如何設定 GitHub Copilot 的客製化指示，透過新增通用與語言特定指示，確保 Copilot 依需求回應
 - **操作步驟：**
     1. 開啟 GitHub Copilot Chat 任一模式，嘗試進行詢問
-    2. 開啟 [copilot-instructions.md](../.github/copilot-instructions.md)，加入指定的回應語言區段
+    2. 開啟 [copilot-instructions.md](../../.github/copilot-instructions.md)，加入指定的回應語言區段
        ```
         ## GitHub Copilot Instructions
         - 一律使用英文回覆
