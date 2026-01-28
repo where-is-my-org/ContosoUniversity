@@ -1,118 +1,117 @@
-# GitHub Copilot Agentice Worokshop Hands-on Documents
+# 場景三：規格→程式碼移轉
 
-歡迎來到 GitHub Copilot Agentice Workshop 的實作文件庫！這裡提供了三個完整的場景指南，幫助您從遺留程式碼中提取需求、轉換為新架構的規格文件，並最終更新程式碼以符合現代化標準。
-
-## 文件清單
-
-### [場景：規格文件→程式碼更新移轉](./specification-to-code.md)
-
-此場景用於依據既有規格文件或移轉項目將既有的專案更新為 .NET 8 及 React + ASP.NET Core Web API 的前後端分離架構，並落實套件升級、跨平台與雲端部署需求。
-
-**內容包括**
-- 架構與專案格式轉換
-- 前後端分離實作
-- 安全性及套件更新
-- 雲端部署與在地測試
-- 變更驗證與完成條件、已知限制與 MSMQ 替代方案
-
-**適用對象 / Target Audience:**
-- 軟體工程師
-- 系統分析師
-- 技術負責人
-- QA 工程師
-- 維護團隊成員
+## 目標
+.NET Framework 4.8 完整遷移至 .NET 8.0，採用 ASP.NET Core 架構，完成相容性修正、安全性更新，移除 Windows 特定依賴，啟用跨平台與雲端部署能力，並建立前後端獨立開發與部署流程。
 
 ---
-## 實作練習
+## 資料夾結構
+- 確保專案結構清晰，便於維護與擴展，禁止將舊有專案與更新後程式碼及專案混和於同一資料夾中。
+- 建議資料夾結構如下：
+```
+/ContosoUniversity
+│── /ContosoUniversity.Legacy       # 舊有 .NET Framework 4.8 專案
+│── /ContosoUniversity              # 更新後 .NET 8.0 專案
+│── /Docs                           # 文件與規格文件
+│── /Scripts                        # 部署與自動化腳本
+│── README.md                       # 專案說明文件
+|── .gitignore
+```
+---
 
-### Lab 1 : Collaboration with Coding Agent
-#### 1.1 將移轉需求指派給 GitHub Copilot Coding Agent 進行開發工作
-- **操作重點：** 示範如何將移轉需求指派給 GitHub Copilot Coding Agent 進行程式碼更新工作
-- **操作步驟**
-   - 開啟 [規格文件→程式碼更新移轉](./specification-to-code.md)，閱讀內容並將內容複製下來
-   - 於 Repository 中建立一個新的 Issue，並將複製的內容貼上
-   ![alt text](./images/issue.png)
-   - 在 Issue 頁面中的右側 Assignees 區域點選 **Assign to Copilot**，指派 GitHub Copilot Coding Agent 為該 Issue 進行開發工作
-   ![alt text](./images/assign-coding-agent.png)
-   - 等待 GitHub Copilot Coding Agent 完成程式碼撰寫，並於 Pull Request 頁面中查看與合併程式碼變更
-   - 切換至 Coding Agent 開發時所建立的分支，點選 **Code** 並選擇 **Code Spaces** 建立 codespace 環境
-   ![alt text](./images/create-codespaces.png)
-- **注意**: 程式於 codspaces 中執行因選擇較小之規格，若出現網頁反映較慢情況，或 404 錯誤，請稍待片刻或重新啟動應用程式或重新整理
+## 核心遷移範圍
+### 專案升級
+- .NET Framework 4.8 遷移至 .NET 8.0
+- 轉換為 SDK-style csproj
+- 更新所有 NuGet 套建至 .NET 8.0 相容版本
 
-
-### Lab 2 : Make GitHub Copilot Work for You
-- 於 Repository 中開啟 GitHub CCodespaces，點選 Code > Codespaces
-    ![alt text](images/create-codespaces.png)
-#### 2.1 調整 custom instructions
-- **操作重點：** 示範如何設定 GitHub Copilot 的客製化指示，透過新增通用與語言特定指示，確保 Copilot 依需求回應
-- **操作步驟：**
-    1. 開啟 GitHub Copilot Chat 任一模式，嘗試進行詢問
-    2. 開啟 [copilot-instructions.md](../.github/copilot-instructions.md)，加入指定的回應語言區段
-       ```
-        ## GitHub Copilot Instructions
-        - 一律使用英文回覆
-        - 產生範例程式碼時，變數及函示名稱必定包含前綴 sample-
-       ```
-    3. 再次進行詢問，確認回應語言是否依指示更新
-        ```
-        請給我一段 bubble sort 的範例程式碼
-        ```
-
-#### 2.2 利用 prompt file 進行 review
-- **操作重點：** 說明如何透過 Prompt 針對特定檔案生成教育性用途的註解
-- **操作步驟：**
-    1. 開啟 `.github/add-educational-comments.prompt.md` 並閱讀內文
-    2. 啟動 GitHub Copilot Chat，選擇 **Agent** 與 **Claude Sonnet 4.5**
-    3. 在現有對話中執行 **Run prompt in current chat**，依據提示內容進行回應需要針對的檔案進行註解
-    4. 檢視回應內容，確認是否符合需求
-
-#### 2.3 利用 custom agent 進行特定情境之任務
-- **操作重點：** 使用專屬聊天模式來進行提示詞優化，幫助使用者釐清提示協助提升提示品質並取得更佳的回應
-- **操作步驟：**
-    1. 在 Chat 模式選擇 **prompt-engineer**，模型選擇 **Claude Sonnet 4.5**
-    2. 輸入模糊的提示：`我需要進行升級` 輸出應包含分析後更加精確之提示詞
+### Framework 遷移
+- 以直接的 HTML 標籤取代原有的打包與壓縮機制（bundling / minification）
+- 在 Program.cs 中使用 app.MapControllerRoute() 進行路由設定
+- 啟用 ASP.NET Core MVC（Program.cs + Middleware）
 
 ---
 
-### Lab 3 : GitHub Copilot - your personal AI-assistant for development
-- 確認程式碼更新移轉已完成後，於 Codespaces 中切換至該分支
-    ![alt text](images/switch-migration-branch.png)
-#### 3.1 使用 Agent 模式實作移轉後確認
-- **操作重點：** 利用 Agent Mode 進行移轉驗證並修復問題
-- **操作步驟：**
-    1. 選擇 `Agent` chat mode，並選擇模型 `Claude Sonnet 4.5`
-    2. 輸入提示詞 `安裝 .NET 8` 進行 .NET 8 安裝
-    3. 安裝完成後可參考生成之指令進行專案建置與執行，須注意至少需確認以下有執行
-        - 啟動 sql server container，並確認正常運行
-        - 確認 `appsettings.Development.json` 中之資料庫連線字串正確指向 sql server container 且密碼正確
-        - 於移轉後的專案目錄執行 `dotnet restore` 及 `dotnet build` 成功
-    4. 執行 `dotnet run` 後，開啟瀏覽器並連線至提供的 endpoint 進行功能測試
-    5. (Option) 若出現 waring: Dereference of a possibly null reference 可藉由 Agent 協助修復
-        ```
-        #terminalSelection 修復 warning
-        ```
-        ![alt text](images/build-warning.png)
-    6. (Option) 若於新增學生資料時出現日期錯誤如 `Enrollment date must be between 1753 and 9999`，請利用 Agent 協助進行偵錯與修復
-        ![alt text](images/date-issue.png)
-        - 使用 prompt `在新增學生資料時，選擇日期後會出現 Enrollment date must be between 1753 and 9999，進行修復`，並可利用 vision 功能提供截圖
-        ![alt text](images/fix-date-format-issue.png)
-    7. 查看 `Scripts/` 了解 Azure 資源部屬腳本及 `.github/workflows/deploy-to-azure.yml` 了解 CI/CD 自動化部署流程
-        ![alt text](images/deployment-review.png)
-#### 3.2 利用 GitHub Copilot 進行 code review
-- **示範重點：** 示範如何結合 Git 流程啟動 Copilot Code Review
-- **目的：** 確保程式變更已整理並交付給 Copilot 進行自動化審查
-- **操作方式：**
-    1. 透過 VS Code 介面開啟 Source Control 視窗
-    2. 點選 comit 欄位上方的 **Copilot Code Review**，逐步檢視建議，可選擇：
-        - Code Review - Unstaged Change
-            ![alt text](images/unstage-code-review.png)
-        - Code Review - Staged Change
-            ![alt text](images/stage-code-review.png)
-    3. 根據 Copilot Code Review 建議進行程式碼修改，完成改動後提交程式碼至遠端儲存庫
+## 架構與程式碼調整
+- Global.asax / App_Start → Program.cs
+- RouteCollection → app.MapControllerRoute
+- GlobalFilter → Middleware
+- Controllers 改用 Microsoft.AspNetCore.Mvc
+- TryUpdateModel → TryUpdateModelAsync
+- Views 移除 @Scripts.Render / @Styles.Render，改用直接 HTML 標籤
+- 設定移至 appsettings.json，移除 Web.config
+- 保留使用引用本地的 jQuery validation 檔案方式，務必確保新舊專案中的引用檔案並未遺漏
+- todo 功能使用到預存程序，在 DbInitializer 在啟動時自動載入預存程序，確保 SQL 腳本會被複製到輸出目錄，讓執行時能讀到
 
-### Lab 4 : Collaboration
-- 回到 Repository 主頁面，點選回先前 Coding Agent 所建立之 PR，選擇 Ready for review
-![alt text](images/ready-for-review.png)
-- 在頁面的最上方找到 Reviewers，選擇 Copilot 作為程式碼審查者
-![alt text](images/request-code-review.png)
-- 等待 Copilot 進行程式碼評審
+---
+
+## 套件與安全性更新
+- EF Core 3.1 → 8.x
+- Microsoft.Data.SqlClient 2.1.4 → 6.1.2（修補 CVE）
+- Microsoft.Identity.Client 升級至最新版
+- Microsoft.Extensions.* 對齊 .NET 8
+
+---
+
+## 服務與相依性注入
+- 全面使用 Dependency Injection
+- NotificationService 暫停 MSMQ (System.Messaging 不支援 .NET 8)，預留未來整合 Azure Service Bus 介面
+- 生產環境需支援 HTTPS，預留整合 Azure Key Vault 作為機敏資訊存放
+- Azure 部署需求
+- 可部署至 Azure App Service（Linux）
+- 提供 ARM Template 建立基礎資源
+- 提供 PowerShell 一鍵部署腳本
+- 提供 GitHub Actions CI/CD（使用 Publish Profile）
+
+---
+
+## 允許本地測試
+- 可透過 codespace 進行本地端測試
+- 本地端測試時，採用 devlopment 模式運行，使用 container 方式執行 SQL Server 並連線進行測試
+- 建立 `appsettings.Development.json` 供本地測試使用，包含 code space 中容器運行之 SQL Server 連線字串
+- 終端機於 codespace 中執行以下指令啟動應用程式：
+  ```bash
+  export ASPNETCORE_ENVIRONMENT=Development dotnet run
+  ```
+
+---
+## .NET 8 Nullable 常見問題預防
+為避免 .NET 8 中 Nullable 參考型別相關警告與錯誤，請在移轉過程中遵循以下規則：
+
+### 1) 避免將 null 指派給非 Nullable 型別
+**問題描述**：出現「Converting null literal or possible null value to non-nullable type」警告。
+
+**預防策略**：
+- 若屬性或變數允許為空，請明確標註為 Nullable（例如 `string?`）。
+- 若邏輯上必須非空，請在建構子、初始化或資料載入流程中確保值一定被指派。
+- 避免使用 `null` 當作預設值給非 Nullable 型別。
+
+### 2) 建構子退出時非 Nullable 屬性不可為 null
+**問題描述**：出現「on-nullable property 'Name' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable」警告。
+
+**預防策略**：
+- 若屬性必填，改用 `required` 修飾詞並在建立物件時提供值。
+- 若屬性可空，將型別改為 Nullable（例如 `string? Name`）。
+- 在建構子中為非 Nullable 屬性提供預設值或明確指派。
+
+### 3) 遷移時的落地原則
+- Entity / ViewModel / DTO 先行盤點欄位是否允許空值，統一標示 Nullable 狀態。
+- 若模型為必填欄位，請使用 `required` 搭配資料驗證（如 DataAnnotations）。
+- 查詢與對應資料時，需特別處理可能為空的資料來源，避免在指派時產生警告。
+
+---
+
+## 驗證與完成條件
+- 本地測試運行正常
+- 務必通過以下驗證條件：
+  - Create / Read / Update / Delete 功能在 students / courses / instructors / departments / todo 頁面均正常運作(使用者進入 notification 中點選 create new student，輸入完資料可以成功建立學生資料，並可在 students 頁面看到該學生資料)
+- dotnet build -c Release 成功
+- Azure App Service 成功啟動並可連線資料庫
+- GitHub Action CI/CD 可自動部署
+
+---
+
+##  文件說明 
+- `README.md`: 說明目前專案的架構及技術採用以供後續維護使用
+- `UPGRADE_REPORT.md`: 說明更版的細節及內容，包括技術決策、變更內容與效能比較
+- `LOCAL_SETUP_GUIDE.md`: 說明如何在 codespace 中順利將該正常運行於 localhost 測試
+- `DEPLOYMENT_GUIDE.md`: 說明 Azure 部署流程、PowerShell 腳本、CI/CD
