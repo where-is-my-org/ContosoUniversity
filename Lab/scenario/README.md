@@ -68,16 +68,11 @@
 #### 1.3 將既有規格文件轉換為新架構的移轉需求規格文件
 - **操作重點：** 示範如何將既有規格文件轉換為新架構的移轉需求規格文件，並指派給 GitHub Copilot Coding Agent 進行文件撰寫工作
 - **操作步驟**
-   - 於 repository 中建立一個新的分支 `docs`
-        
-        ![alt text](../images/new-branch.png)
-   - 修改場景一 PR 之 base branch 為 `docs` 分支
-        
-        ![alt text](../images/change-base-branch.png)
    - 開啟 [場景二：舊有規格轉新規格文件](./scenario-2-spec-to-new-architecture.md)，並將內容複製下來
    - 於 Repository 中建立一個新的 Issue，並將複製的內容貼上
    - 在 Issue 頁面中的右側 Assignees 區域點選 **Assign to Copilot**
-   - 點選分支 icon，選擇 `<github-copilot-created-branch>` 作為 base 分支，完成指派 GitHub Copilot Coding Agent 為該 Issue 進行文件撰寫工作
+   - 點選分支 icon，選擇 `copilot/legacy-to-spec` 作為 base 分支，完成指派 GitHub Copilot Coding Agent 為該 Issue 進行文件撰寫工作
+        ![alt text](../images/assign-with-branch.png)
 
 ### Lab 2 : Make GitHub Copilot Work for You
 - 於 Repository 中開啟 GitHub CCodespaces，點選 Code > Codespaces
