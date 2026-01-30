@@ -31,23 +31,27 @@
 - **操作步驟**
    - 開啟 [規格文件→程式碼更新移轉](./specification-to-code.md)，閱讀內容並將內容複製下來
    - 於 Repository 中建立一個新的 Issue，並將複製的內容貼上
-   ![alt text](./images/issue.png)
+   
+        ![alt text](../images/issue.png)
    - 在 Issue 頁面中的右側 Assignees 區域點選 **Assign to Copilot**，指派 GitHub Copilot Coding Agent 為該 Issue 進行開發工作
-   ![alt text](./images/assign-coding-agent.png)
+   
+        ![alt text](../images/assign-coding-agent.png)
    - 等待 GitHub Copilot Coding Agent 完成程式碼撰寫，並於 Pull Request 頁面中查看與合併程式碼變更
    - 切換至 Coding Agent 開發時所建立的分支，點選 **Code** 並選擇 **Code Spaces** 建立 codespace 環境
-   ![alt text](./images/create-codespaces.png)
+   
+        ![alt text](../images/create-codespaces.png)
 - **注意**: 程式於 codspaces 中執行因選擇較小之規格，若出現網頁反映較慢情況，或 404 錯誤，請稍待片刻或重新啟動應用程式或重新整理
 
 
 ### Lab 2 : Make GitHub Copilot Work for You
 - 於 Repository 中開啟 GitHub CCodespaces，點選 Code > Codespaces
-    ![alt text](images/create-codespaces.png)
+    
+    ![alt text](../images/create-codespaces.png)
 #### 2.1 調整 custom instructions
 - **操作重點：** 示範如何設定 GitHub Copilot 的客製化指示，透過新增通用與語言特定指示，確保 Copilot 依需求回應
 - **操作步驟：**
     1. 開啟 GitHub Copilot Chat 任一模式，嘗試進行詢問
-    2. 開啟 [copilot-instructions.md](../.github/copilot-instructions.md)，加入指定的回應語言區段
+    2. 開啟 [copilot-instructions.md](../../.github/copilot-instructions.md)，加入指定的回應語言區段
        ```
         ## GitHub Copilot Instructions
         - 一律使用英文回覆
@@ -76,7 +80,8 @@
 
 ### Lab 3 : GitHub Copilot - your personal AI-assistant for development
 - 確認程式碼更新移轉已完成後，於 Codespaces 中切換至該分支
-    ![alt text](images/switch-migration-branch.png)
+    
+    ![alt text](../images/switch-migration-branch.png)
 #### 3.1 使用 Agent 模式實作移轉後確認
 - **操作重點：** 利用 Agent Mode 進行移轉驗證並修復問題
 - **操作步驟：**
@@ -91,13 +96,15 @@
         ```
         #terminalSelection 修復 warning
         ```
-        ![alt text](images/build-warning.png)
+        ![alt text](../images/build-warning.png)
     6. (Option) 若於新增學生資料時出現日期錯誤如 `Enrollment date must be between 1753 and 9999`，請利用 Agent 協助進行偵錯與修復
-        ![alt text](images/date-issue.png)
+        
+        ![alt text](../images/date-issue.png)
         - 使用 prompt `在新增學生資料時，選擇日期後會出現 Enrollment date must be between 1753 and 9999，進行修復`，並可利用 vision 功能提供截圖
-        ![alt text](images/fix-date-format-issue.png)
+            ![alt text](../images/fix-date-format-issue.png)
     7. 查看 `Scripts/` 了解 Azure 資源部屬腳本及 `.github/workflows/deploy-to-azure.yml` 了解 CI/CD 自動化部署流程
-        ![alt text](images/deployment-review.png)
+        
+        ![alt text](../images/deployment-review.png)
 #### 3.2 利用 GitHub Copilot 進行 code review
 - **示範重點：** 示範如何結合 Git 流程啟動 Copilot Code Review
 - **目的：** 確保程式變更已整理並交付給 Copilot 進行自動化審查
@@ -105,14 +112,18 @@
     1. 透過 VS Code 介面開啟 Source Control 視窗
     2. 點選 comit 欄位上方的 **Copilot Code Review**，逐步檢視建議，可選擇：
         - Code Review - Unstaged Change
-            ![alt text](images/unstage-code-review.png)
+            
+            ![alt text](../images/unstage-code-review.png)
         - Code Review - Staged Change
-            ![alt text](images/stage-code-review.png)
+            
+            ![alt text](../images/stage-code-review.png)
     3. 根據 Copilot Code Review 建議進行程式碼修改，完成改動後提交程式碼至遠端儲存庫
 
 ### Lab 4 : Collaboration
 - 回到 Repository 主頁面，點選回先前 Coding Agent 所建立之 PR，選擇 Ready for review
-![alt text](images/ready-for-review.png)
+
+    ![alt text](../images/ready-for-review.png)
 - 在頁面的最上方找到 Reviewers，選擇 Copilot 作為程式碼審查者
-![alt text](images/request-code-review.png)
+
+    ![alt text](../images/request-code-review.png)
 - 等待 Copilot 進行程式碼評審
